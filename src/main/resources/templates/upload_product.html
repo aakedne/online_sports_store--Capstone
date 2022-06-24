@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Product</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: ghostwhite;">
+<div class="topnav">
+    <a th:href="@{/}">Home</a>
+    <a class="active" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/product/new}">Add New Product</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/allOrders}">Customer Orders</a>
+    <a th:href="@{#}" style="float: right">Hi, <span sec:authentication="name"></span></a>
+    <a th:href="@{/logout}" style="float: right">Logout</a>
+</div>
+<div>
+    <div class="jumbotron jumbotron-fluid" style="background-color: ghostwhite">
+        <div class="container">
+            <h1 style="text-align: center; font-family: fantasy;font-size: 30px !important;margin-top: -20px;">Enter the
+                Product details</h1>
+            <hr>
+            <form th:action="@{/product/save}" th:object="${product}" method="post"
+                  enctype="multipart/form-data"
+                  class="form">
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input class="form-control" type="text" th:field="*{name}" id="name"
+                           placeholder="Enter Product Name"
+                           required>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}"
+                         th:errors="*{name}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Product Description</label>
+                    <input class="form-control" type="text" th:field="*{description}" id="description"
+                           placeholder="Enter Product Description"
+                           required>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('description')}"
+                         th:errors="*{description}"></div>
+                </div>
+                <div class="form-group">
+                    <label for="price">Product Price</label>
+                    <input class="form-control" type="number" th:field="*{price}" id="price"
+                           placeholder="Enter Price"
+                           required>
+                    <div class="alert alert-warning" th:if="${#fields.hasErrors('price')}"
+                         th:errors="*{price}"></div>
+                </div>
+                <div class="form-group">
+                    <label>Photo: </label>
+                    <input type="file" name="image" accept="image/png, image/jpeg"/>
+                </div>
+                <input type="submit" class="btn btn-success col-4">
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

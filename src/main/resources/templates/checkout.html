@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: ghostwhite;">
+<div class="topnav">
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/user/orders}" style="float: left">My Orders</a>
+    <a th:href="@{#}" style="float: right">Hi, <span sec:authentication="name"></span></a>
+    <a th:href="@{/logout}" style="float: right">Logout</a>
+</div>
+<div class="jumbotron jumbotron-fluid" style="background-color: ghostwhite">
+    <div class="container">
+        <h1 style="text-align: center; font-family: fantasy; font-size: 40px !important;margin-top: -20px;">Order
+            Details</h1>
+        <hr>
+        <div class="container" style="display: grid;">
+            <p style="font-style: inherit;font-family: fantasy;float: right;font-size: 25px;color: crimson;">Your Order
+                ID: <span
+                        th:text="${order.getId()}"></span></p>
+            <br>
+            <p style="color: crimson;font-style: inherit;font-family: fantasy;float: right;font-size: 25px;">Total
+                Price: <span
+                        th:text="${order.getTotalPrice()}"></span></p>
+            <br>
+            <p style="color: crimson;font-style: inherit;font-family: fantasy;float: right;font-size: 25px;">Following
+                are the products
+                that you ordered !</p>
+            <br>
+        </div>
+        <table class="table table-bordered table-responsive-md">
+            <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Image</th>
+                <!--                <th>Complete View</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${order.getProducts()}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.description}"></td>
+                <td th:text="${product.price}"></td>
+                <td style="text-align: center">
+                    <img style="border-radius: 50%"
+                         th:src="${product.getPhotosImagePath()}" alt="Product Image"
+                         width="100px" height="100px"/>
+                </td>
+                <!--                <td>
+                                    <a th:href="@{/product/getById/{id}(id=${product.id})}"
+                                       class="btn btn-info">View Product</a>
+                                </td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

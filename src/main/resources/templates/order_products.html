@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://datatables.net/media/css/site-examples.css">
+</head>
+<style>
+    .dataTables_paginate {
+        float: right !important;
+    }
+</style>
+<body style="background-color: ghostwhite;">
+<div class="topnav">
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/product/new}">Add New Product</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/allOrders}">Customer Orders</a>
+    <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/orders}" style="float: left">My Orders</a>
+    <a th:href="@{#}" style="float: right">Hi, <span sec:authentication="name"></span></a>
+    <a th:href="@{/logout}" style="float: right">Logout</a>
+</div>
+<div class="jumbotron jumbotron-fluid" style="background-color: ghostwhite">
+
+    <div class="container">
+        <h1 style="text-align: center; font-family: fantasy; font-size: 40px !important;margin-top: -20px;">Items in the
+            selected order</h1>
+        <hr>
+        <table class="table table-bordered table-responsive-md" id="table_id">
+            <thead>
+            <tr>
+                <th>Product Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Complete View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${productsList}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.description}"></td>
+                <td th:text="${product.price}"></td>
+                <td style="text-align: center">
+                    <img style="border-radius: 50%"
+                         th:src="${product.getPhotosImagePath()}" alt="Product Image"
+                         width="100px" height="100px"/>
+                </td>
+                <td>
+                    <a th:href="@{/product/getById/{id}(id=${product.id})}"
+                       class="btn btn-warning">View Product</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            "dom": "tp",
+            "ordering": false,
+            "pagingType": "simple",
+            "lengthMenu": [4]
+        });
+    });
+</script>
+</body>
+</html>

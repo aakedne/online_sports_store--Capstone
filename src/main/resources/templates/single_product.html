@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        /*height: 500px; !* Should be removed. Only for demonstration *!*/
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+<body style="background-color: ghostwhite;">
+<div class="topnav">
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/product/new}">Add New Product</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/allOrders}">Customer Orders</a>
+    <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/orders}" style="float: left">My Orders</a>
+    <a th:href="@{#}" style="float: right">Hi, <span sec:authentication="name"></span></a>
+    <a th:href="@{/logout}" style="float: right">Logout</a>
+</div>
+<div class="jumbotron jumbotron-fluid" style="background-color: ghostwhite">
+    <div class="container">
+        <h1 style="text-align: center; font-family: fantasy; font-size: 40px !important;margin-top: -20px;">Single
+            Product
+            Details</h1>
+        <hr>
+        <div class="row">
+            <div class="column">
+                <h2 style="font-family: cursive;font-size: 25px;">Product Name:</h2>
+                <h2 th:text="${product.name}" style="font-family: fantasy;color: brown;"></h2>
+                <hr>
+                <br>
+                <h2 style="font-family: cursive;font-size: 25px;">Product Description:</h2>
+                <p th:text="${product.description}" style="font-family: fantasy;color: brown;"></p>
+                <hr>
+                <br>
+                <h2 style="font-family: cursive;font-size: 25px;">Product Price:</h2>
+                <p th:text="${product.price}" style="font-family: fantasy;color: brown;"></p>
+            </div>
+            <div class="column">
+                <img th:src="${product.getPhotosImagePath()}" alt="Product Image" width="600px" height="450px"
+                     style="border-style: solid;border-width: 3px;border-color: brown;"/>
+            </div>
+        </div>
+        <br>
+        <div sec:authorize="hasRole('ROLE_USER')">
+            <a th:href="@{/cart/add/{id}(id=${product.id})}">
+                <button type="button" class="btn btn-primary btn-lg btn-block">Add to Cart
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://datatables.net/media/css/site-examples.css">
+</head>
+<style>
+    .dataTables_paginate {
+        float: right !important;
+    }
+</style>
+<body style="background-color: ghostwhite;">
+<div class="topnav">
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/product/new}">Add New Product</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/allOrders}">Customer Orders</a>
+    <a sec:authorize="hasRole('ROLE_USER')" th:href="@{/user/orders}" style="float: left">My Orders</a>
+    <a th:href="@{#}" style="float: right">Hi, <span sec:authentication="name"></span></a>
+    <a th:href="@{/logout}" style="float: right">Logout</a>
+</div>
+<div class="jumbotron jumbotron-fluid" style="background-color: ghostwhite">
+
+    <div class="container">
+        <h1 style="text-align: center; font-family: fantasy; font-size: 40px !important;margin-top: -20px;">Order
+            Details</h1>
+        <hr>
+
+        <table class="table table-bordered table-responsive-md" id="table_id">
+            <thead>
+            <tr>
+                <th>Order Id</th>
+                <th>Order DateTime</th>
+                <th>Total Price</th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')">Customer Details</th>
+                <th>Ordered Products</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${ordersList}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.orderDateTime}"></td>
+                <td th:text="${order.totalPrice}"></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/orders/getCustomerByOrderId/{id}(id=${order.id})}"
+                       class="btn btn-warning">View Customer</a>
+                </td>
+                <td>
+                    <a th:href="@{/orders/getById/{id}(id=${order.id})}"
+                       class="btn btn-success">View Products</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            "dom": "tp",
+            "ordering": false,
+            "pagingType": "simple",
+            "lengthMenu": [10]
+        });
+    });
+</script>
+</body>
+</html>
